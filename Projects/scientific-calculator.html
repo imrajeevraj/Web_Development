@@ -1,1 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ultimate Scientific Calculator</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { 
+            sans: ['Poppins', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          boxShadow: {
+            'neon': '0 0 10px rgba(56, 189, 248, 0.5), 0 0 20px rgba(56, 189, 248, 0.3)',
+            'glass': '0 8px 32px 0 rgba(0, 0, 0, 0.37)',
+          },
+          animation: {
+            'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+          }
+        }
+      }
+    }
+  </script>
+  
+  <style>
+    /* Hide scrollbar */
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+    /* Custom Text Glow for the Display */
+    .text-glow {
+      text-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
+    }
+    
+    /* Subtle moving gradient background */
+    body {
+      background: radial-gradient(circle at 50% -20%, #1e1b4b, #0f172a, #020617);
+    }
+
+    /* Button Press Effect */
+    button:active {
+      transform: scale(0.95) translateY(1px);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center text-white p-4 overflow-hidden relative">
+
+  <div class="absolute top-0 left-1/4 w-96 h-96 bg-purple-600/20 rounded-full blur-[128px] pointer-events-none"></div>
+  <div class="absolute bottom-0 right-1/4 w-96 h-96 bg-cyan-600/10 rounded-full blur-[128px] pointer-events-none"></div>
+
+  <div class="w-full max-w-4xl relative z-10">
+    
+    <div class="bg-slate-900/60 backdrop-blur-2xl border border-white/10 rounded-[40px] shadow-2xl p-6 sm:p-10 relative overflow-hidden ring-1 ring-white/5">
+      
+      <div class="flex justify-between items-center mb-8">
+        <div class="text-[10px] font-bold tracking-[0.2em] text-cyan-500 uppercase drop-shadow-sm">
+          Quantum Calc <span class="text-white/30 ml-2">v2.1</span>
+        </div>
+        
+        <button id="mode-toggle" class="group relative px-4 py-1.5 rounded-full bg-slate-800/80 border border-white/10 overflow-hidden transition-all hover:border-cyan-500/50 hover:shadow-[0_0_15px_rgba(6,182,212,0.15)]">
+          <div class="absolute inset-0 bg-gradient-to-r from-cyan-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+          <div class="relative flex items-center gap-2">
+            <span id="mode-indicator" class="text-[10px] font-bold tracking-widest text-cyan-400 group-hover:text-cyan-300 transition-colors">DEG</span>
+            <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(34,211,238,0.8)] animate-pulse"></span>
+          </div>
+        </button>
+      </div>
+
+      <div class="w-full h-28 bg-black/40 rounded-3xl mb-8 flex flex-col items-end justify-center px-6 relative border border-white/5 shadow-[inset_0_2px_10px_rgba(0,0,0,0.5)] overflow-hidden group">
+        <div class="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-white/5 to-transparent pointer-events-none"></div>
+        <div id="history" class="text-xs text-cyan-500/50 mb-1 h-5 font-mono tracking-wider transition-all"></div>
+        <div id="display" class="text-glow w-full text-right text-5xl sm:text-6xl font-mono font-light tracking-wide overflow-x-auto whitespace-nowrap no-scrollbar text-white transition-all">0</div>
+      </div>
+
+      <div class="flex flex-col md:flex-row gap-8">
+        
+        <div class="md:w-5/12 hidden md:block">
+           <div class="text-[9px] text-white/20 mb-3 uppercase tracking-[0.2em] text-center font-bold">Functions</div>
+           <div class="grid grid-cols-3 gap-3">
+            <button class="btn-sci" data-value="sin(">sin</button>
+            <button class="btn-sci" data-value="cos(">cos</button>
+            <button class="btn-sci" data-value="tan(">tan</button>
+            
+            <button class="btn-sci" data-value="asin(">asin</button>
+            <button class="btn-sci" data-value="acos(">acos</button>
+            <button class="btn-sci" data-value="atan(">atan</button>
+
+            <button class="btn-sci" data-value="log(">log</button>
+            <button class="btn-sci" data-value="ln(">ln</button>
+            <button class="btn-sci" data-value="e">e</button>
+            
+            <button class="btn-sci" data-value="^">xʸ</button>
+            <button class="btn-sci" data-value="sqrt(">√</button>
+            <button class="btn-sci" data-value="Math.PI">π</button>
+            
+            <button class="btn-sci" data-value="(">(</button>
+            <button class="btn-sci" data-value=")">)</button>
+            <button class="btn-sci" data-value="mod">mod</button>
+          </div>
+        </div>
+
+        <div class="hidden md:block w-px bg-gradient-to-b from-transparent via-white/10 to-transparent my-2"></div>
+
+        <div class="w-full md:w-7/12">
+          <div class="text-[9px] text-white/20 mb-3 uppercase tracking-[0.2em] text-center font-bold">Input</div>
+
+          <div class="grid grid-cols-4 gap-3">
+            
+            <button class="btn-action text-rose-400 hover:bg-rose-500/10 hover:shadow-[0_0_15px_rgba(244,63,94,0.2)]" data-action="clear">AC</button>
+            <button class="btn-action text-cyan-400 hover:bg-cyan-500/10" data-action="backspace">⌫</button>
+            <button class="btn-sci text-cyan-400" data-value="%">%</button> 
+            <button class="btn-op" data-value="/">÷</button>
+
+            <button class="btn-num" data-value="7">7</button>
+            <button class="btn-num" data-value="8">8</button>
+            <button class="btn-num" data-value="9">9</button>
+            <button class="btn-op" data-value="*">×</button>
+
+            <button class="btn-num" data-value="4">4</button>
+            <button class="btn-num" data-value="5">5</button>
+            <button class="btn-num" data-value="6">6</button>
+            <button class="btn-op" data-value="-">−</button>
+
+            <button class="btn-num" data-value="1">1</button>
+            <button class="btn-num" data-value="2">2</button>
+            <button class="btn-num" data-value="3">3</button>
+            <button class="btn-op" data-value="+">+</button>
+
+            <button class="btn-num" data-value="0">0</button>
+            <button class="btn-num" data-value="00">00</button>
+            <button class="btn-num" data-value=".">.</button>
+            
+            <button class="btn-equal" data-action="calculate">
+              <div class="absolute inset-0 bg-gradient-to-br from-indigo-600 to-purple-600 transition-all group-hover:scale-110"></div>
+              <div class="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+              <span class="relative z-10">=</span>
+            </button>
+
+          </div>
+        </div>
+
+      </div>
+      
+      <div class="mt-8 text-center">
+         <span class="text-[10px] text-white/20 uppercase tracking-[0.3em] hover:text-cyan-400 transition-colors cursor-default">Designed by Rajeev Ranjan</span>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // --- STYLING CONSTANTS ---
+    // baseClass defines the uniform shape (rounded-2xl) and size
+    const baseClass = "h-14 sm:h-16 relative rounded-2xl text-lg font-medium transition-all duration-200 flex items-center justify-center border border-white/5 shadow-lg select-none outline-none focus:ring-2 focus:ring-cyan-500/50 focus:ring-offset-2 focus:ring-offset-slate-900";
+    
+    const sciClass = `${baseClass} bg-slate-800/40 text-cyan-200/70 hover:text-cyan-100 hover:bg-slate-700/60 hover:shadow-[0_0_10px_rgba(34,211,238,0.1)] text-sm font-sans`;
+    const numClass = `${baseClass} bg-white/5 text-white/90 hover:bg-white/10 hover:border-white/20 text-xl font-sans`;
+    const opClass = `${baseClass} bg-indigo-500/10 text-indigo-300 hover:bg-indigo-500/20 hover:text-indigo-100 hover:shadow-[0_0_15px_rgba(99,102,241,0.2)] text-2xl`;
+    const actionClass = `${baseClass} bg-slate-800/40 font-semibold text-base`;
+    
+    // Equal Button: Inherits baseClass (so it's the SAME SHAPE) + adds overflow-hidden for the gradient
+    const equalClass = `${baseClass} relative overflow-hidden group text-2xl text-white shadow-indigo-500/40`;
+
+    // Apply classes
+    document.querySelectorAll('.btn-sci').forEach(b => b.className = sciClass);
+    document.querySelectorAll('.btn-num').forEach(b => b.className = numClass);
+    document.querySelectorAll('.btn-op').forEach(b => b.className = opClass);
+    document.querySelectorAll('.btn-action').forEach(b => b.className = actionClass);
+    document.querySelectorAll('.btn-equal').forEach(b => b.className = equalClass);
+
+    // --- MATH ENGINE ---
+    let isDegree = true;
+
+    window.sin = (x) => Math.sin(isDegree ? x * Math.PI / 180 : x);
+    window.cos = (x) => Math.cos(isDegree ? x * Math.PI / 180 : x);
+    window.tan = (x) => { 
+      if (isDegree && Math.abs(x % 180) === 90) throw new Error("Undefined");
+      return Math.tan(isDegree ? x * Math.PI / 180 : x); 
+    };
+    window.asin = (x) => isDegree ? Math.asin(x) * 180 / Math.PI : Math.asin(x);
+    window.acos = (x) => isDegree ? Math.acos(x) * 180 / Math.PI : Math.acos(x);
+    window.atan = (x) => isDegree ? Math.atan(x) * 180 / Math.PI : Math.atan(x);
+
+    const displayEl = document.getElementById("display");
+    const historyEl = document.getElementById("history");
+    const modeBtn = document.getElementById("mode-toggle");
+    const modeInd = document.getElementById("mode-indicator");
+
+    let currentInput = "0";
+
+    modeBtn.addEventListener("click", () => {
+      isDegree = !isDegree;
+      modeInd.textContent = isDegree ? "DEG" : "RAD";
+    });
+
+    function updateDisplay() {
+      displayEl.textContent = currentInput || "0";
+      displayEl.scrollLeft = displayEl.scrollWidth;
+    }
+
+    function appendValue(val) {
+      if (currentInput === "0" && val !== ".") currentInput = val;
+      else if (currentInput === "Error" || currentInput === "Undefined") currentInput = val;
+      else currentInput += val;
+      updateDisplay();
+    }
+
+    function clearAll() {
+      currentInput = "0";
+      historyEl.textContent = "";
+      updateDisplay();
+    }
+
+    function backspace() {
+      if (currentInput === "Error" || currentInput === "Undefined") currentInput = "0";
+      else currentInput = currentInput.slice(0, -1) || "0";
+      updateDisplay();
+    }
+
+    function calculate() {
+      try {
+        historyEl.textContent = currentInput + " =";
+        let expression = currentInput.replace(/(\d+(\.\d+)?)%/g, "($1/100)");
+
+        expression = expression
+          .replace(/×/g, "*").replace(/÷/g, "/")
+          .replace(/\^/g, "**").replace(/π/g, "Math.PI")
+          .replace(/e/g, "Math.E")
+          .replace(/\blog\(/g, "Math.log10(")
+          .replace(/\bln\(/g, "Math.log(")
+          .replace(/\bsqrt\(/g, "Math.sqrt(")
+          .replace(/mod/g, "%");
+
+        if (!/^[0-9+\-*/().\sMathPIElogsqrtcintanmos%]+$/.test(expression.replace(/Math\./g, ''))) {
+           // Loose check
+        }
+
+        const result = Function("return " + expression)();
+        const formatted = parseFloat(result.toFixed(10)); 
+        currentInput = String(formatted);
+
+      } catch (e) {
+        currentInput = "Error";
+      }
+      updateDisplay();
+    }
+
+    // --- EVENTS ---
+    document.querySelectorAll("button").forEach(btn => {
+      if (btn.id === "mode-toggle") return;
+      btn.addEventListener("click", () => {
+        const val = btn.dataset.value;
+        const act = btn.dataset.action;
+        if (act === "clear") clearAll();
+        else if (act === "backspace") backspace();
+        else if (act === "calculate") calculate();
+        else if (val) appendValue(val);
+      });
+    });
+
+    document.addEventListener("keydown", (e) => {
+      const key = e.key;
+      if (/^[0-9+\-*/().%^]$/.test(key)) appendValue(key);
+      else if (key === "Enter" || key === "=") { e.preventDefault(); calculate(); }
+      else if (key === "Backspace") backspace();
+      else if (key === "Escape" || key.toLowerCase() === "c") clearAll();
+    });
+  </script>
+</body>
+</html>
