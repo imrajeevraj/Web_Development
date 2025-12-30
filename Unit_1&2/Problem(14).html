@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Find The Largest Number</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            max-width: 400px;
+
+        }
+        input, button {
+            padding: 10px;
+            margin: 5px 0;
+            width: 100%;
+            box-sizing: border-box;
+
+        }
+        #result {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h2>Find The Largest Number</h2>
+    <input type="number" id="numberInput1" placeholder="Enter first number">
+    <input type="number" id="numberInput2" placeholder="Enter Second number">
+    <input type="number" id="numberInput3" placeholder="Enter Third number">
+
+    <button onclick="checkLargestNumber()">Check</button>
+    <p id="result"></p>
+
+    <script>
+        function checkLargestNumber() {
+            var num1= Number(document.getElementById("numberInput1").value);
+            var num2= Number(document.getElementById("numberInput2").value);
+            var num3= Number(document.getElementById("numberInput3").value);
+
+            var result = document.getElementById("result");
+            if (num1 === "") {
+                result.textContent = "Please enter number.";
+                return;
+            }
+            if (num2 === "") {
+                result.textContent = "Please enter number.";
+                return;
+            }
+            if (num3 === "") {
+                result.textContent = "Please enter number.";
+                return;
+            }
+            
+            if (num1 > num2 && num1 > num3) {
+                result.textContent = num1 + " is the largest Number.";
+            } 
+            else if (num2 > num1 && num2 > num3) {
+                result.textContent = num2 + " is the largest Number.";    
+            } 
+            else {
+                result.textContent = num3 + " is the largest Number";
+            }
+        }
+    </script>
+</body>
+</html>
