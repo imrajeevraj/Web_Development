@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Reverse Number</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            max-width: 400px;
+
+        }
+        input, button {
+            padding: 10px;
+            margin: 5px 0;
+            width: 100%;
+            box-sizing: border-box;
+
+        }
+        #result {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h2>Reverse Number</h2>
+    <input type="number" id="numberInput" placeholder="Enter a number">
+
+    <button onclick="reverseNumber()">Check</button>
+    <p id="result"></p>
+
+    <script>
+        function reverseNumber() {
+            var num= Number(document.getElementById("numberInput").value);
+
+            var result = document.getElementById("result");
+            if (num === "") {
+                result.textContent = "Please enter number.";
+                return;
+            }
+            let reverse = 0;
+             while (num != 0) {
+               let reminder = num  % 10;
+               reverse = reverse * 10 + reminder;
+               num = Math.floor(num / 10);
+             }
+            
+            result.textContent = "Reverse Number is " + reverse;
+            
+           
+          
+        }
+    </script>
+</body>
+</html>

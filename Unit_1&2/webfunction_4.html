@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Ticket Calculater</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            max-width: 400px;
+
+        }
+        input, button {
+            padding: 10px;
+            margin: 5px 0;
+            width: 100%;
+            box-sizing: border-box;
+
+        }
+        #result {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h2>Ticket Calculater</h2>
+    <input type="text" id="name1" placeholder="Enter your name">
+    <input type="number" id="age1" placeholder="Enter your age">
+    <input type="text" id="name2" placeholder="Enter your name">
+    <input type="number" id="age2" placeholder="Enter your age">
+    <input type="text" id="name3" placeholder="Enter your name">
+    <input type="number" id="age3" placeholder="Enter your age">
+
+
+    <button onclick="getPrice()">Check</button>
+    <p id="TotalPrice"></p>
+
+    <script>
+        function getPrice() {
+            var age1= Number(document.getElementById("age1").value);
+            var age2= Number(document.getElementById("age2").value);
+            var age3= Number(document.getElementById("age3").value);
+
+            var TotalPrice = document.getElementById("TotalPrice");
+            if (age1 === "") {
+                TotalPrice.textContent = "Please enter your age.";
+                return;
+            }
+            if (age2 === "") {
+                TotalPrice.textContent = "Please enter your age.";
+                return;
+            }
+            if (age3 === "") {
+                TotalPrice.textContent = "Please enter your age.";
+                return;
+            }
+            
+            let price = 0;
+            if (age1 && age2 && age3 > 12){
+              price = 3 * 5 
+            }else if ()
+            
+            result.textContent = "Reverse Number is " + reverse;
+            
+           
+          
+        }
+    </script>
+</body>
+</html>
